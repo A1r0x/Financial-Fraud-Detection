@@ -1,0 +1,2306 @@
+{
+    "Metadata": {
+        "TemplateId": "arn:aws:cloudformation:us-east-2:867344449800:generatedTemplate/bbfa6d16-aac1-49ae-8482-e4d2f656108f"
+    },
+    "Parameters": {
+        "LambdaFunction00FraudTransaction00cIXA5CodeS3KeyXwLem": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "The Amazon S3 key of the deployment package."
+        },
+        "LambdaFunction00FraudTransaction00cIXA5CodeS3BucketjkYz3": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "An Amazon S3 bucket in the same AWS-Region as your function. The bucket can be in a different AWS-account."
+        },
+        "LambdaFunction00FraudTransaction00cIXA5CodeImageUricqUMD": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "URI of a [container image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html) in the Amazon ECR registry."
+        },
+        "LambdaFunction00FraudTransaction00cIXA5CodeSourceKMSKeyArn6hvfA": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "Value of write only property Code/SourceKMSKeyArn of resource LambdaFunction00FraudTransaction00cIXA5."
+        },
+        "LambdaFunction00FraudTransaction00cIXA5CodeZipFileTZ4NW": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "(Node.js and Python) The source code of your Lambda function. If you include your function source inline with this parameter, CFN places it in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html). This zip file cannot exceed 4MB. For the ``Handler`` property, the first part of the handler identifier must be ``index``. For example, ``index.handler``.\n  For JSON, you must escape quotes and special characters such as newline (``\\n``) with a backslash.\n If you specify a function that interacts with an AWS CloudFormation custom resource, you don't have to write your own functions to send responses to the custom resource that invoked the function. AWS CloudFormation provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html)) that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html) for details."
+        },
+        "LambdaFunction00FraudTransaction00cIXA5CodeS3ObjectVersionzmcXx": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "For versioned objects, the version of the deployment package object to use."
+        }
+    },
+    "Resources": {
+        "ApplicationAutoScalingScalableTarget00tabletransactionhistory005mcGr": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ScalableDimension": "dynamodb:table:WriteCapacityUnits",
+                "SuspendedState": {
+                    "DynamicScalingOutSuspended": false,
+                    "ScheduledScalingSuspended": false,
+                    "DynamicScalingInSuspended": false
+                },
+                "MinCapacity": 1,
+                "ResourceId": "table/transaction_history",
+                "ServiceNamespace": "dynamodb",
+                "MaxCapacity": 10
+            }
+        },
+        "CloudFrontCachePolicy001c6db51aa33f469a8245dae26771f53000tRAG6": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Amplify cache policy for image optimization",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "all"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "Authorization",
+                                "Accept",
+                                "Host"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "Managed-Amplify-ImageOptimization"
+                }
+            }
+        },
+        "CloudFrontOriginRequestPolicy0088a5eaf42fd44709b370b4c650ea3fcf00i5a5N": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "none"
+                    },
+                    "Comment": "Policy for S3 origin with CORS",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "whitelist",
+                        "Headers": [
+                            "origin",
+                            "access-control-request-headers",
+                            "access-control-request-method"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "none"
+                    },
+                    "Name": "Managed-CORS-S3Origin"
+                }
+            }
+        },
+        "MemoryDBParameterGroup00defaultmemorydbredis7search00Qtocp": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MemoryDB::ParameterGroup",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ParameterGroupName": "default.memorydb-redis7.search",
+                "Family": "memorydb_redis7",
+                "Description": "Customized default parameter group for memorydb_redis7 with search-enabled yes"
+            }
+        },
+        "CloudFrontCachePolicy004d1d2f1d3a7149ad9e087ea5d843a55600kKNa8": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Default Amplify cache policy",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "all"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "Authorization",
+                                "Accept",
+                                "CloudFront-Viewer-Country",
+                                "Host"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "all"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "Managed-Amplify-Default"
+                }
+            }
+        },
+        "EC2Route00rtb0b3927db01d2d30e000s1oS1": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::Route",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "NatGatewayId": {
+                    "Ref": "EC2NatGateway00nat08573c8dc412d0e1a00Y3ubN"
+                },
+                "RouteTableId": {
+                    "Ref": "EC2RouteTable00rtb0b3927db01d2d30e000P4mK1"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0"
+            }
+        },
+        "CloudFrontCachePolicy00a6bad94636c34c33aa98362c74a7fb1300oX8df": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Default Amplify cache policy without cookies",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "all"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "Authorization",
+                                "Accept",
+                                "CloudFront-Viewer-Country",
+                                "Host"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "Managed-Amplify-DefaultNoCookies"
+                }
+            }
+        },
+        "EC2DHCPOptions00dopt0f9957ece46c2e344008inZj": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::DHCPOptions",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "DomainName": "us-east-2.compute.internal",
+                "DomainNameServers": [
+                    "AmazonProvidedDNS"
+                ],
+                "Tags": []
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsProvisionedCapacityLow64446e2d9da845aba37a713065a741d700GxtUb": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "LessThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 300,
+                "EvaluationPeriods": 3,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70"
+                ],
+                "MetricName": "ProvisionedWriteCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-ProvisionedCapacityLow-64446e2d-9da8-45ab-a37a-713065a741d7",
+                "Statistic": "Average",
+                "InsufficientDataActions": [],
+                "Tags": [],
+                "Threshold": 1
+            }
+        },
+        "EC2NetworkInterface00eni08e73e18a7f9071d000xJJS5": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NetworkInterface",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Description": "VPC Endpoint Interface vpce-0c606073f26a6c8cf",
+                "PrivateIpAddress": "172.31.19.202",
+                "PrivateIpAddresses": [
+                    {
+                        "PrivateIpAddress": "172.31.19.202",
+                        "Primary": true
+                    }
+                ],
+                "SecondaryPrivateIpAddressCount": 0,
+                "Ipv6PrefixCount": 0,
+                "Ipv4Prefixes": [],
+                "Ipv4PrefixCount": 0,
+                "GroupSet": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "Ipv6Prefixes": [],
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                },
+                "SourceDestCheck": true,
+                "InterfaceType": "vpc_endpoint",
+                "Tags": []
+            }
+        },
+        "CloudFrontCachePolicy000862726205a94f769dedb50ca2e3a84f00RliEC": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy for Elemental MediaPackage Origin",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStrings": [
+                                "aws.manifestfilter",
+                                "start",
+                                "end",
+                                "m"
+                            ],
+                            "QueryStringBehavior": "whitelist"
+                        },
+                        "EnableAcceptEncodingBrotli": false,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "origin"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 86400,
+                    "Name": "Managed-Elemental-MediaPackage"
+                }
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsAlarmLow99c7c27332414bd7b1fd9a2bbd778669007sSdn": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "LessThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 60,
+                "EvaluationPeriods": 15,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70"
+                ],
+                "MetricName": "ConsumedWriteCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-AlarmLow-99c7c273-3241-4bd7-b1fd-9a2bbd778669",
+                "Statistic": "Sum",
+                "InsufficientDataActions": [],
+                "Tags": [
+                    {
+                        "Value": "arn:aws:resource-groups:us-east-2:867344449800:group/FraudDetection/00be5ko2mquvk8xptsbebcywd8",
+                        "Key": "awsApplication"
+                    }
+                ],
+                "Threshold": 30
+            }
+        },
+        "IAMRole00FraudTransactionrole9zgxbkhy00bafov": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/service-role/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::867344449800:policy/service-role/AWSLambdaBasicExecutionRole-7e8d71e5-0a22-4b13-9c9c-5ed673bf5f2e",
+                    "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "FraudTransaction-role-9zgxbkhy",
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Resource": "*",
+                                    "Action": [
+                                        "ec2:CreateNetworkInterface",
+                                        "ec2:DescribeNetworkInterfaces",
+                                        "ec2:DeleteNetworkInterface",
+                                        "ec2:AssignPrivateIpAddresses",
+                                        "ec2:UnassignPrivateIpAddresses"
+                                    ],
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        },
+                        "PolicyName": "fraudEC2Permissions"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Resource": [
+                                        "*"
+                                    ],
+                                    "Action": [
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:UpdateItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Sid": "Statement1"
+                                }
+                            ]
+                        },
+                        "PolicyName": "fraudLambdaDynamo"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Resource": "arn:aws:kafka:us-east-2:867344449800:cluster/demo-cluster-1/72a90fe3-7f1f-4433-b6e5-48b6b398fa1f-s1",
+                                    "Action": [
+                                        "kafka:DescribeClusterV2",
+                                        "kafka:DescribeCluster"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Sid": "VisualEditor0"
+                                },
+                                {
+                                    "Resource": "*",
+                                    "Action": [
+                                        "kafka:ListClustersV2",
+                                        "kafka:ListClusters",
+                                        "kafka:GetBootstrapBrokers"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Sid": "VisualEditor1"
+                                }
+                            ]
+                        },
+                        "PolicyName": "MSKAccessPolicyForLambda"
+                    }
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "EC2NetworkInterface00eni050067a9ddbc88ea400q8e5e": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NetworkInterface",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Description": "Interface for NAT Gateway nat-08573c8dc412d0e1a",
+                "PrivateIpAddress": "172.31.5.25",
+                "PrivateIpAddresses": [
+                    {
+                        "PrivateIpAddress": "172.31.5.25",
+                        "Primary": true
+                    }
+                ],
+                "SecondaryPrivateIpAddressCount": 0,
+                "Ipv6PrefixCount": 0,
+                "Ipv4Prefixes": [],
+                "Ipv4PrefixCount": 0,
+                "GroupSet": [],
+                "Ipv6Prefixes": [],
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                },
+                "SourceDestCheck": false,
+                "InterfaceType": "null",
+                "Tags": []
+            }
+        },
+        "CloudFrontOriginRequestPolicy0033f36d7ef39646d990e052428a34d9dc00jsqj5": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "all"
+                    },
+                    "Comment": "Policy to forward all parameters in viewer requests and all CloudFront headers as of June 2022",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "allViewerAndWhitelistCloudFront",
+                        "Headers": [
+                            "CloudFront-Viewer-Time-Zone",
+                            "CloudFront-Viewer-Address",
+                            "CloudFront-Viewer-Country",
+                            "CloudFront-Is-IOS-Viewer",
+                            "CloudFront-Is-Tablet-Viewer",
+                            "CloudFront-Forwarded-Proto",
+                            "CloudFront-Viewer-Country-Name",
+                            "CloudFront-Is-Mobile-Viewer",
+                            "CloudFront-Is-SmartTV-Viewer",
+                            "CloudFront-Viewer-Country-Region",
+                            "CloudFront-Is-Android-Viewer",
+                            "CloudFront-Viewer-Country-Region-Name",
+                            "CloudFront-Viewer-City",
+                            "CloudFront-Viewer-Latitude",
+                            "CloudFront-Viewer-Longitude",
+                            "CloudFront-Viewer-Http-Version",
+                            "CloudFront-Viewer-Postal-Code",
+                            "CloudFront-Viewer-ASN",
+                            "CloudFront-Is-Desktop-Viewer",
+                            "CloudFront-Viewer-Metro-Code",
+                            "CloudFront-Viewer-TLS"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "all"
+                    },
+                    "Name": "Managed-AllViewerAndCloudFrontHeaders-2022-06"
+                }
+            }
+        },
+        "EC2SubnetNetworkAclAssociation00aclassoc011cff9e7ff5dba4300BTyTl": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "EC2NetworkAcl00acl052156e48bf70bf040054Lm5"
+                },
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                }
+            }
+        },
+        "CloudFrontOriginRequestPolicy00775133bc15f249f9abeaafb2e0bf67d200VpSsT": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "all"
+                    },
+                    "Comment": "Policy for Elemental MediaTailor Origin",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "whitelist",
+                        "Headers": [
+                            "origin",
+                            "access-control-request-headers",
+                            "x-forwarded-for",
+                            "access-control-request-method",
+                            "user-agent"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "none"
+                    },
+                    "Name": "Managed-Elemental-MediaTailor-PersonalizedManifests"
+                }
+            }
+        },
+        "IAMManagedPolicy00policyserviceroleAWSGlueServiceRoleEZCRCs3Policy00EUYyd": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::ManagedPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ManagedPolicyName": "AWSGlueServiceRole-EZCRC-s3Policy",
+                "Path": "/service-role/",
+                "Description": "This policy will be used for Glue Crawler and Job execution. Please do NOT delete!",
+                "Groups": [],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Resource": [
+                                "arn:aws:s3:::aws-glue-assets-867344449800-us-east-2/*"
+                            ],
+                            "Action": [
+                                "s3:GetObject",
+                                "s3:PutObject"
+                            ],
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "IAMRole00AWSGlueServiceRole00bn77x"
+                    }
+                ],
+                "Users": []
+            }
+        },
+        "CloudFrontOriginRequestPolicy00216adef65c7f47e4b9895492eafa07d300FOQ6S": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "all"
+                    },
+                    "Comment": "Policy to forward all parameters in viewer requests",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "allViewer"
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "all"
+                    },
+                    "Name": "Managed-AllViewer"
+                }
+            }
+        },
+        "ElastiCacheUser00default00aWfUF": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ElastiCache::User",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "UserName": "default",
+                "UserId": "default",
+                "Engine": "redis",
+                "Tags": []
+            }
+        },
+        "EC2Subnet00subnet04820e14de91cd66f00ADo14": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::Subnet",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "MapPublicIpOnLaunch": true,
+                "EnableDns64": false,
+                "AvailabilityZoneId": "use2-az2",
+                "PrivateDnsNameOptionsOnLaunch": {
+                    "EnableResourceNameDnsARecord": false,
+                    "HostnameType": "ip-name",
+                    "EnableResourceNameDnsAAAARecord": false
+                },
+                "CidrBlock": "172.31.16.0/20",
+                "Ipv6Native": false,
+                "Tags": []
+            }
+        },
+        "IAMRole00AWSServiceRoleForTrustedAdvisor00pSZOH": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/aws-service-role/trustedadvisor.amazonaws.com/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/aws-service-role/AWSTrustedAdvisorServiceRolePolicy"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSServiceRoleForTrustedAdvisor",
+                "Description": "Access for the AWS Trusted Advisor Service to help reduce cost, increase performance, and improve security of your AWS environment.",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "trustedadvisor.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "DynamoDBTable00flaggedtransactions00LR2QA": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::DynamoDB::Table",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "SSESpecification": {
+                    "SSEEnabled": false
+                },
+                "TableName": "flagged_transactions",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeType": "S",
+                        "AttributeName": "transaction_id"
+                    }
+                ],
+                "ContributorInsightsSpecification": {
+                    "Enabled": false
+                },
+                "BillingMode": "PROVISIONED",
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": false
+                },
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 1,
+                    "ReadCapacityUnits": 1
+                },
+                "KeySchema": [
+                    {
+                        "KeyType": "HASH",
+                        "AttributeName": "transaction_id"
+                    }
+                ],
+                "DeletionProtectionEnabled": false,
+                "TableClass": "STANDARD",
+                "Tags": [],
+                "TimeToLiveSpecification": {
+                    "Enabled": false
+                }
+            }
+        },
+        "EC2NetworkAcl00acl052156e48bf70bf040054Lm5": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NetworkAcl",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "Tags": []
+            }
+        },
+        "EC2EIPAssociation00eipassoc083331aa89c4a899900IjWnc": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::EIPAssociation",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PrivateIpAddress": {
+                    "Fn::GetAtt": [
+                        "EC2NetworkInterface00eni050067a9ddbc88ea400q8e5e",
+                        "PrimaryPrivateIpAddress"
+                    ]
+                },
+                "NetworkInterfaceId": {
+                    "Ref": "EC2NetworkInterface00eni050067a9ddbc88ea400q8e5e"
+                },
+                "EIP": {
+                    "Fn::GetAtt": [
+                        "EC2EIP0031311991690086s3H",
+                        "PublicIp"
+                    ]
+                },
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "EC2EIP0031311991690086s3H",
+                        "AllocationId"
+                    ]
+                }
+            }
+        },
+        "EventsEventBus00default00MBJUQ": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Events::EventBus",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Tags": [],
+                "Name": "default"
+            }
+        },
+        "EC2NatGateway00nat08573c8dc412d0e1a00Y3ubN": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NatGateway",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PrivateIpAddress": "172.31.5.25",
+                "ConnectivityType": "public",
+                "VpcId": "vpc-03ecd1fbb4be04a80",
+                "EniId": "eni-050067a9ddbc88ea4",
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "EC2EIP0031311991690086s3H",
+                        "AllocationId"
+                    ]
+                },
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                },
+                "Tags": []
+            }
+        },
+        "IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRole7e8d71e50a224b139c9c5ed673bf5f2e00NXRDY": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::ManagedPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ManagedPolicyName": "AWSLambdaBasicExecutionRole-7e8d71e5-0a22-4b13-9c9c-5ed673bf5f2e",
+                "Path": "/service-role/",
+                "Description": "",
+                "Groups": [],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Resource": "arn:aws:logs:us-east-2:867344449800:*",
+                            "Action": "logs:CreateLogGroup",
+                            "Effect": "Allow"
+                        },
+                        {
+                            "Resource": [
+                                "arn:aws:logs:us-east-2:867344449800:log-group:/aws/lambda/FraudTransaction:*"
+                            ],
+                            "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "IAMRole00FraudTransactionrole9zgxbkhy00bafov"
+                    }
+                ],
+                "Users": []
+            }
+        },
+        "MSKServerlessCluster00clusterdemocluster172a90fe37f1f4433b6e548b6b398fa1fs100xAHyB": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MSK::ServerlessCluster",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ClusterName": "demo-cluster-1",
+                "VpcConfigs": [
+                    {
+                        "SecurityGroups": [
+                            {
+                                "Fn::GetAtt": [
+                                    "EC2SecurityGroup00sg09e6095dfbaa7a7a800nnaGW",
+                                    "GroupId"
+                                ]
+                            }
+                        ],
+                        "SubnetIds": [
+                            {
+                                "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                            },
+                            {
+                                "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                            },
+                            {
+                                "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                            }
+                        ]
+                    }
+                ],
+                "ClientAuthentication": {
+                    "Sasl": {
+                        "Iam": {
+                            "Enabled": true
+                        }
+                    }
+                },
+                "Tags": {}
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsProvisionedCapacityHigh07599552a09d4a9f941b65963125fc8e000HGFH": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 300,
+                "EvaluationPeriods": 3,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70"
+                ],
+                "MetricName": "ProvisionedWriteCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-ProvisionedCapacityHigh-07599552-a09d-4a9f-941b-65963125fc8e",
+                "Statistic": "Average",
+                "InsufficientDataActions": [],
+                "Tags": [
+                    {
+                        "Value": "arn:aws:resource-groups:us-east-2:867344449800:group/FraudDetection/00be5ko2mquvk8xptsbebcywd8",
+                        "Key": "awsApplication"
+                    }
+                ],
+                "Threshold": 1
+            }
+        },
+        "EC2VPCEndpoint00vpce07a57d88f9d248026009XlQz": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::VPCEndpoint",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PrivateDnsEnabled": false,
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "RouteTableIds": [],
+                "ServiceName": "com.amazonaws.elasticache.serverless.us-east-2.vpce-svc-084915518df4892e0",
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Resource": "*",
+                            "Action": "*",
+                            "Effect": "Allow",
+                            "Principal": "*"
+                        }
+                    ]
+                },
+                "VpcEndpointType": "Interface",
+                "SecurityGroupIds": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "SubnetIds": [
+                    {
+                        "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                    }
+                ]
+            }
+        },
+        "EC2Route00rtb0b3927db01d2d30e000giee3": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::Route",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "EC2RouteTable00rtb0b3927db01d2d30e000P4mK1"
+                },
+                "DestinationCidrBlock": {
+                    "Fn::GetAtt": [
+                        "EC2VPC00vpc03ecd1fbb4be04a8000L42F8",
+                        "CidrBlock"
+                    ]
+                },
+                "GatewayId": "local",
+                "VpcEndpointId": "local"
+            }
+        },
+        "LambdaEventSourceMapping0057ad815bc1554a44a83446e5908b158a00BMLyi": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "StartingPosition": "LATEST",
+                "BatchSize": 100,
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00FraudTransaction00cIXA5",
+                        "Arn"
+                    ]
+                },
+                "Topics": [
+                    "transaction_stream"
+                ],
+                "AmazonManagedKafkaEventSourceConfig": {
+                    "ConsumerGroupId": "57ad815b-c155-4a44-a834-46e5908b158a"
+                },
+                "Enabled": false,
+                "EventSourceArn": "arn:aws:kafka:us-east-2:867344449800:cluster/demo-cluster-1/72a90fe3-7f1f-4433-b6e5-48b6b398fa1f-s1",
+                "Tags": []
+            }
+        },
+        "EC2Subnet00subnet0e201ebf286ed83de0035N6w": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::Subnet",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "MapPublicIpOnLaunch": true,
+                "EnableDns64": false,
+                "AvailabilityZoneId": "use2-az1",
+                "PrivateDnsNameOptionsOnLaunch": {
+                    "EnableResourceNameDnsARecord": false,
+                    "HostnameType": "ip-name",
+                    "EnableResourceNameDnsAAAARecord": false
+                },
+                "CidrBlock": "172.31.0.0/20",
+                "Ipv6Native": false,
+                "Tags": []
+            }
+        },
+        "ApplicationAutoScalingScalableTarget00tableflaggedtransactions00DiCVM": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ScalableDimension": "dynamodb:table:WriteCapacityUnits",
+                "SuspendedState": {
+                    "DynamicScalingOutSuspended": false,
+                    "ScheduledScalingSuspended": false,
+                    "DynamicScalingInSuspended": false
+                },
+                "MinCapacity": 1,
+                "ResourceId": "table/flagged_transactions",
+                "ServiceNamespace": "dynamodb",
+                "MaxCapacity": 10
+            }
+        },
+        "CloudFrontOriginRequestPolicy00acba4595bd2849b8b9fe13317c0390fa00QY8j3": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "none"
+                    },
+                    "Comment": "Policy to forward user-agent and referer headers to origin",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "whitelist",
+                        "Headers": [
+                            "referer",
+                            "user-agent"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "none"
+                    },
+                    "Name": "Managed-UserAgentRefererHeaders"
+                }
+            }
+        },
+        "LambdaFunction00FraudTransaction00cIXA5": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "MemorySize": 1024,
+                "Description": "",
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                },
+                "VpcConfig": {
+                    "SecurityGroupIds": [
+                        "sg-09e6095dfbaa7a7a8"
+                    ],
+                    "SubnetIds": [
+                        {
+                            "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                        },
+                        {
+                            "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                        },
+                        {
+                            "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                        }
+                    ],
+                    "Ipv6AllowedForDualStack": false
+                },
+                "Timeout": 5,
+                "RuntimeManagementConfig": {
+                    "UpdateRuntimeOn": "Auto"
+                },
+                "Handler": "lambda_function/lambda_handler.lambda_handler",
+                "Code": {
+                    "SourceKMSKeyArn": {
+                        "Ref": "LambdaFunction00FraudTransaction00cIXA5CodeSourceKMSKeyArn6hvfA"
+                    },
+                    "S3ObjectVersion": {
+                        "Ref": "LambdaFunction00FraudTransaction00cIXA5CodeS3ObjectVersionzmcXx"
+                    },
+                    "S3Bucket": {
+                        "Ref": "LambdaFunction00FraudTransaction00cIXA5CodeS3BucketjkYz3"
+                    },
+                    "ZipFile": {
+                        "Ref": "LambdaFunction00FraudTransaction00cIXA5CodeZipFileTZ4NW"
+                    },
+                    "ImageUri": {
+                        "Ref": "LambdaFunction00FraudTransaction00cIXA5CodeImageUricqUMD"
+                    },
+                    "S3Key": {
+                        "Ref": "LambdaFunction00FraudTransaction00cIXA5CodeS3KeyXwLem"
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "IAMRole00FraudTransactionrole9zgxbkhy00bafov",
+                        "Arn"
+                    ]
+                },
+                "FileSystemConfigs": [],
+                "FunctionName": "FraudTransaction",
+                "Runtime": "python3.12",
+                "PackageType": "Zip",
+                "LoggingConfig": {
+                    "LogFormat": "Text",
+                    "LogGroup": "/aws/lambda/FraudTransaction"
+                },
+                "RecursiveLoop": "Terminate",
+                "EphemeralStorage": {
+                    "Size": 2056
+                },
+                "Architectures": [
+                    "x86_64"
+                ]
+            }
+        },
+        "EC2VPCEndpoint00vpce09d7a78eedf0d676300aYJGw": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::VPCEndpoint",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PrivateDnsEnabled": false,
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "RouteTableIds": [],
+                "ServiceName": "com.amazonaws.elasticache.serverless.us-east-2.vpce-svc-06c3defebaa2d7258",
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Resource": "*",
+                            "Action": "*",
+                            "Effect": "Allow",
+                            "Principal": "*"
+                        }
+                    ]
+                },
+                "VpcEndpointType": "Interface",
+                "SecurityGroupIds": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "SubnetIds": [
+                    {
+                        "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                    }
+                ]
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsProvisionedCapacityHigh6549159464124ca3a8dfdf992927b51800FHsZ0": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 300,
+                "EvaluationPeriods": 3,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45"
+                ],
+                "MetricName": "ProvisionedReadCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-ProvisionedCapacityHigh-65491594-6412-4ca3-a8df-df992927b518",
+                "Statistic": "Average",
+                "InsufficientDataActions": [],
+                "Tags": [],
+                "Threshold": 1
+            }
+        },
+        "LogsLogGroup00awslambdaFraudTransaction003XojE": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogGroup",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogGroupClass": "STANDARD",
+                "LogGroupName": "/aws/lambda/FraudTransaction",
+                "DataProtectionPolicy": {}
+            }
+        },
+        "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::Subnet",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "MapPublicIpOnLaunch": true,
+                "EnableDns64": false,
+                "AvailabilityZoneId": "use2-az3",
+                "PrivateDnsNameOptionsOnLaunch": {
+                    "EnableResourceNameDnsARecord": false,
+                    "HostnameType": "ip-name",
+                    "EnableResourceNameDnsAAAARecord": false
+                },
+                "CidrBlock": "172.31.32.0/20",
+                "Ipv6Native": false,
+                "Tags": []
+            }
+        },
+        "IAMRole00AWSServiceRoleForSupport002dDD8": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/aws-service-role/support.amazonaws.com/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/aws-service-role/AWSSupportServiceRolePolicy"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSServiceRoleForSupport",
+                "Description": "Enables resource access for AWS to provide billing, administrative and support services",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "support.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "LogsLogStream0020241025LATESTd27b39d2343f4e1c98d815969ee1f640000PJ66": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogStream",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogStreamName": "2024/10/25/[$LATEST]d27b39d2343f4e1c98d815969ee1f640",
+                "LogGroupName": {
+                    "Ref": "LogsLogGroup00awslambdaFraudTransaction003XojE"
+                }
+            }
+        },
+        "ApplicationAutoScalingScalableTarget00tabletransactionhistory00RSC6r": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ScalableDimension": "dynamodb:table:ReadCapacityUnits",
+                "SuspendedState": {
+                    "DynamicScalingOutSuspended": false,
+                    "ScheduledScalingSuspended": false,
+                    "DynamicScalingInSuspended": false
+                },
+                "MinCapacity": 1,
+                "ResourceId": "table/transaction_history",
+                "ServiceNamespace": "dynamodb",
+                "MaxCapacity": 10
+            }
+        },
+        "EC2NetworkInterface00eni0e5b689b47076037800WHRmI": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NetworkInterface",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Description": "VPC Endpoint Interface vpce-09eb0eb287e438f25",
+                "PrivateIpAddress": "172.31.27.209",
+                "PrivateIpAddresses": [
+                    {
+                        "PrivateIpAddress": "172.31.27.209",
+                        "Primary": true
+                    }
+                ],
+                "SecondaryPrivateIpAddressCount": 0,
+                "Ipv6PrefixCount": 0,
+                "Ipv4Prefixes": [],
+                "Ipv4PrefixCount": 0,
+                "GroupSet": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "Ipv6Prefixes": [],
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                },
+                "SourceDestCheck": true,
+                "InterfaceType": "vpc_endpoint",
+                "Tags": []
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsProvisionedCapacityLowf63dc104095745278569473fb11a12f300hnlP2": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "LessThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 300,
+                "EvaluationPeriods": 3,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45"
+                ],
+                "MetricName": "ProvisionedReadCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-ProvisionedCapacityLow-f63dc104-0957-4527-8569-473fb11a12f3",
+                "Statistic": "Average",
+                "InsufficientDataActions": [],
+                "Tags": [
+                    {
+                        "Value": "arn:aws:resource-groups:us-east-2:867344449800:group/FraudDetection/00be5ko2mquvk8xptsbebcywd8",
+                        "Key": "awsApplication"
+                    }
+                ],
+                "Threshold": 1
+            }
+        },
+        "EC2SecurityGroup00sg09e6095dfbaa7a7a800nnaGW": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::SecurityGroup",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "GroupDescription": "default VPC security group",
+                "GroupName": "default",
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "-1",
+                        "FromPort": -1,
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "EC2VPC00vpc03ecd1fbb4be04a8000L42F8",
+                                "DefaultSecurityGroup"
+                            ]
+                        },
+                        "ToPort": -1,
+                        "SourceSecurityGroupOwnerId": "867344449800"
+                    }
+                ],
+                "SecurityGroupEgress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "IpProtocol": "-1",
+                        "FromPort": -1,
+                        "ToPort": -1
+                    }
+                ]
+            }
+        },
+        "MemoryDBUser00default00TUyat": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MemoryDB::User",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Tags": [],
+                "UserName": "default"
+            }
+        },
+        "LogsLogStream0020241025LATEST6209b0689822481b92f6d2565c3fb8f200tjcgP": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogStream",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogStreamName": "2024/10/25/[$LATEST]6209b0689822481b92f6d2565c3fb8f2",
+                "LogGroupName": {
+                    "Ref": "LogsLogGroup00awslambdaFraudTransaction003XojE"
+                }
+            }
+        },
+        "MemoryDBParameterGroup00defaultmemorydbredis6004JKnC": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MemoryDB::ParameterGroup",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ParameterGroupName": "default.memorydb-redis6",
+                "Family": "memorydb_redis6",
+                "Description": "Default parameter group for memorydb_redis6"
+            }
+        },
+        "EC2KeyPair00frauddetection00H3bzH": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::KeyPair",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "KeyName": "fraud-detection",
+                "KeyType": "rsa",
+                "PublicKeyMaterial": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCuuNzcrSpaxxMqASIWN+0bJY9DUEbwtFF7uHgZaNGQLjuUWJy3rEMEwAKzatn1if84+9tKAIPr+BdEyJ1ZeK+Df5sZXeR3Lb4Djwg7b7VQ7GoJn6JWyOH9OclID3/1yVByQubA5d72T7nT1b8w40AMts2SKHs7baAyjXvIE32FT3XKsSacf3IhV7ZpmuiSVVL6UAIB3W6yZJUkWk+zj0xj3vlmNKAgKVr4ympNIZfkQaBUXh7OcraCXo6i+qVZLR+a7nhFji/ilRYB5SrceUf7IMCIQgyghCLgGAEOxqSfLTB3Uk2W3O8Abxn27widLYNoQEHYjWpBJQILvY5u+JLl fraud-detection\n",
+                "Tags": []
+            }
+        },
+        "EC2VPCDHCPOptionsAssociation00vpc03ecd1fbb4be04a8000VyIGJ": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "DhcpOptionsId": {
+                    "Ref": "EC2DHCPOptions00dopt0f9957ece46c2e344008inZj"
+                }
+            }
+        },
+        "CloudFrontCachePolicy004cc15a8ad71548a482b8cc0b614638fe005YhsI": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy for origins that return Cache-Control headers and serve different content based on values present in the query string.",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "all"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "x-method-override",
+                                "origin",
+                                "host",
+                                "x-http-method",
+                                "x-http-method-override"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "all"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "UseOriginCacheControlHeaders-QueryStrings"
+                }
+            }
+        },
+        "IAMRole00AWSServiceRoleForAWSServiceCatalogAppRegistry00v92bW": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/aws-service-role/servicecatalog-appregistry.amazonaws.com/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/aws-service-role/AWSServiceCatalogAppRegistryServiceRolePolicy"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSServiceRoleForAWSServiceCatalogAppRegistry",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "servicecatalog-appregistry.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "ApplicationAutoScalingScalableTarget00tableflaggedtransactions009pqBi": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ScalableDimension": "dynamodb:table:ReadCapacityUnits",
+                "SuspendedState": {
+                    "DynamicScalingOutSuspended": false,
+                    "ScheduledScalingSuspended": false,
+                    "DynamicScalingInSuspended": false
+                },
+                "MinCapacity": 1,
+                "ResourceId": "table/flagged_transactions",
+                "ServiceNamespace": "dynamodb",
+                "MaxCapacity": 10
+            }
+        },
+        "EC2NetworkInterface00eni0f5a5f142e4dae87600zKEJU": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NetworkInterface",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Description": "VPC Endpoint Interface vpce-09d7a78eedf0d6763",
+                "PrivateIpAddress": "172.31.18.192",
+                "PrivateIpAddresses": [
+                    {
+                        "PrivateIpAddress": "172.31.18.192",
+                        "Primary": true
+                    }
+                ],
+                "SecondaryPrivateIpAddressCount": 0,
+                "Ipv6PrefixCount": 0,
+                "Ipv4Prefixes": [],
+                "Ipv4PrefixCount": 0,
+                "GroupSet": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "Ipv6Prefixes": [],
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                },
+                "SourceDestCheck": true,
+                "InterfaceType": "vpc_endpoint",
+                "Tags": []
+            }
+        },
+        "EC2VPCEndpoint00vpce0c606073f26a6c8cf00PYp5v": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::VPCEndpoint",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PrivateDnsEnabled": false,
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "RouteTableIds": [],
+                "ServiceName": "com.amazonaws.elasticache.serverless.us-east-2.vpce-svc-07da751d2bff8a4c3",
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Resource": "*",
+                            "Action": "*",
+                            "Effect": "Allow",
+                            "Principal": "*"
+                        }
+                    ]
+                },
+                "VpcEndpointType": "Interface",
+                "SecurityGroupIds": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "SubnetIds": [
+                    {
+                        "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                    }
+                ]
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsAlarmHigh8ffe6510857545b6938f4e52e9a0500400xHIH4": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 60,
+                "EvaluationPeriods": 2,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45"
+                ],
+                "MetricName": "ConsumedReadCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-AlarmHigh-8ffe6510-8575-45b6-938f-4e52e9a05004",
+                "Statistic": "Sum",
+                "InsufficientDataActions": [],
+                "Tags": [],
+                "Threshold": 42
+            }
+        },
+        "CloudFrontOriginRequestPolicy00b689b0a853d040abbaf268738e2966ac007BPtO": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "all"
+                    },
+                    "Comment": "Policy to forward all parameters in viewer requests except for the Host header",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "allExcept",
+                        "Headers": [
+                            "host"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "all"
+                    },
+                    "Name": "Managed-AllViewerExceptHostHeader"
+                }
+            }
+        },
+        "EC2VPCEndpoint00vpce09eb0eb287e438f2500KF44H": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::VPCEndpoint",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PrivateDnsEnabled": false,
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                },
+                "RouteTableIds": [],
+                "ServiceName": "com.amazonaws.vpce.us-east-2.vpce-svc-039eba919642c024e",
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Resource": "*",
+                            "Action": "*",
+                            "Effect": "Allow",
+                            "Principal": "*"
+                        }
+                    ]
+                },
+                "VpcEndpointType": "Interface",
+                "SecurityGroupIds": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "SubnetIds": [
+                    {
+                        "Ref": "EC2Subnet00subnet0e201ebf286ed83de0035N6w"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                    },
+                    {
+                        "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                    }
+                ]
+            }
+        },
+        "EC2SubnetNetworkAclAssociation00aclassoc034a7519b930dbbb200FPKEF": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "EC2NetworkAcl00acl052156e48bf70bf040054Lm5"
+                },
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                }
+            }
+        },
+        "LogsLogStream0020241025LATESTde970b8d1dce4462bfd24c6c833012fd00nUudb": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogStream",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogStreamName": "2024/10/25/[$LATEST]de970b8d1dce4462bfd24c6c833012fd",
+                "LogGroupName": {
+                    "Ref": "LogsLogGroup00awslambdaFraudTransaction003XojE"
+                }
+            }
+        },
+        "MemoryDBParameterGroup00defaultmemorydbredis7searchpreview00IydNd": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MemoryDB::ParameterGroup",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ParameterGroupName": "default.memorydb-redis7.search.preview",
+                "Family": "memorydb_redis7.search.preview",
+                "Description": "Default parameter group for memorydb_redis7.search.preview"
+            }
+        },
+        "CloudFrontOriginRequestPolicy0059781a5b390341f3afcbaf62929ccde100r8XNq": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "none"
+                    },
+                    "Comment": "Policy for custom origin with CORS",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "whitelist",
+                        "Headers": [
+                            "origin"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "none"
+                    },
+                    "Name": "Managed-CORS-CustomOrigin"
+                }
+            }
+        },
+        "DynamoDBTable00transactionhistory00j2oUz": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::DynamoDB::Table",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "SSESpecification": {
+                    "SSEEnabled": false
+                },
+                "TableName": "transaction_history",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeType": "S",
+                        "AttributeName": "timestamp"
+                    },
+                    {
+                        "AttributeType": "S",
+                        "AttributeName": "transaction_id"
+                    }
+                ],
+                "ContributorInsightsSpecification": {
+                    "Enabled": false
+                },
+                "BillingMode": "PROVISIONED",
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": false
+                },
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 1,
+                    "ReadCapacityUnits": 1
+                },
+                "KeySchema": [
+                    {
+                        "KeyType": "HASH",
+                        "AttributeName": "transaction_id"
+                    },
+                    {
+                        "KeyType": "RANGE",
+                        "AttributeName": "timestamp"
+                    }
+                ],
+                "DeletionProtectionEnabled": false,
+                "TableClass": "STANDARD",
+                "Tags": [],
+                "TimeToLiveSpecification": {
+                    "Enabled": false
+                }
+            }
+        },
+        "LogsLogStream0020241025LATEST7939229303394521bf57a19b153d381a00TiGYc": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogStream",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogStreamName": "2024/10/25/[$LATEST]7939229303394521bf57a19b153d381a",
+                "LogGroupName": {
+                    "Ref": "LogsLogGroup00awslambdaFraudTransaction003XojE"
+                }
+            }
+        },
+        "CloudFrontCachePolicy002e54312d136d493c8eb9b001f22f67d200xum4X": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy for Amplify Origin",
+                    "MinTTL": 2,
+                    "MaxTTL": 600,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "all"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "Authorization",
+                                "CloudFront-Viewer-Country",
+                                "Host"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "all"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 2,
+                    "Name": "Managed-Amplify"
+                }
+            }
+        },
+        "EC2VPC00vpc03ecd1fbb4be04a8000L42F8": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::VPC",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CidrBlock": "172.31.0.0/16",
+                "EnableDnsSupport": true,
+                "InstanceTenancy": "default",
+                "EnableDnsHostnames": true,
+                "Tags": []
+            }
+        },
+        "EC2RouteTable00rtb0b3927db01d2d30e000P4mK1": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::RouteTable",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "EC2VPC00vpc03ecd1fbb4be04a8000L42F8"
+                }
+            }
+        },
+        "CloudFrontCachePolicy007e5fad67ee984ad0b05a394999eefc1a00HKQC6": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Amplify cache policy for static content",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "none"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "Authorization",
+                                "Host"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "Managed-Amplify-StaticContent"
+                }
+            }
+        },
+        "CloudFrontCachePolicy00658327eaf89d4faba63d7e88639e58f600Io5Rx": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy with caching enabled. Supports Gzip and Brotli compression.",
+                    "MinTTL": 1,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "none"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "none"
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 86400,
+                    "Name": "Managed-CachingOptimized"
+                }
+            }
+        },
+        "IAMRole00AWSServiceRoleForApplicationAutoScalingDynamoDBTable00a99xN": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/aws-service-role/AWSApplicationAutoscalingDynamoDBTablePolicy"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSServiceRoleForApplicationAutoScaling_DynamoDBTable",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "dynamodb.application-autoscaling.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "IAMRole00AWSServiceRoleForResourceExplorer00XMjNa": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/aws-service-role/resource-explorer-2.amazonaws.com/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/aws-service-role/AWSResourceExplorerServiceRolePolicy"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSServiceRoleForResourceExplorer",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "resource-explorer-2.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "MemoryDBACL00openaccess00rVUOQ": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MemoryDB::ACL",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ACLName": "open-access",
+                "Tags": [],
+                "UserNames": [
+                    "default"
+                ]
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsAlarmLow66310c6d54344918a88979e67490b82500OWr5P": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "LessThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 60,
+                "EvaluationPeriods": 15,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45"
+                ],
+                "MetricName": "ConsumedReadCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:c27304d1-2d33-439c-87f1-8bd6524f44de:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/b04bbe70-c7f9-4e42-b9ff-ad6d14c16f45.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-AlarmLow-66310c6d-5434-4918-a889-79e67490b825",
+                "Statistic": "Sum",
+                "InsufficientDataActions": [],
+                "Tags": [
+                    {
+                        "Value": "arn:aws:resource-groups:us-east-2:867344449800:group/FraudDetection/00be5ko2mquvk8xptsbebcywd8",
+                        "Key": "awsApplication"
+                    }
+                ],
+                "Threshold": 30
+            }
+        },
+        "CloudFrontCachePolicy004135ea2d6df844a39df34b5a84be39ad00FPmBL": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy with caching disabled",
+                    "MinTTL": 0,
+                    "MaxTTL": 0,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "none"
+                        },
+                        "EnableAcceptEncodingBrotli": false,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "none"
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": false
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "Managed-CachingDisabled"
+                }
+            }
+        },
+        "CloudWatchAlarm00TargetTrackingtableflaggedtransactionsAlarmHigh7c2f1de603874c65b90b64d786cb630800tQYnd": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudWatch::Alarm",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ComparisonOperator": "GreaterThanThreshold",
+                "Dimensions": [
+                    {
+                        "Value": {
+                            "Ref": "DynamoDBTable00flaggedtransactions00LR2QA"
+                        },
+                        "Name": "TableName"
+                    }
+                ],
+                "Period": 60,
+                "EvaluationPeriods": 2,
+                "Namespace": "AWS/DynamoDB",
+                "OKActions": [],
+                "AlarmActions": [
+                    "arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70"
+                ],
+                "MetricName": "ConsumedWriteCapacityUnits",
+                "ActionsEnabled": true,
+                "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-2:867344449800:scalingPolicy:28e05242-ab30-44bc-ae40-477a281c3a4b:resource/dynamodb/table/flagged_transactions:policyName/$flagged_transactions-scaling-policy:createdBy/baab98cb-72b3-4a87-9f34-e9f23ca19c70.",
+                "AlarmName": "TargetTracking-table/flagged_transactions-AlarmHigh-7c2f1de6-0387-4c65-b90b-64d786cb6308",
+                "Statistic": "Sum",
+                "InsufficientDataActions": [],
+                "Tags": [],
+                "Threshold": 42
+            }
+        },
+        "LogsLogStream0020241025LATESTcced528cf80a4ae78e425b9af2ff150d00hg8Vc": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogStream",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogStreamName": "2024/10/25/[$LATEST]cced528cf80a4ae78e425b9af2ff150d",
+                "LogGroupName": {
+                    "Ref": "LogsLogGroup00awslambdaFraudTransaction003XojE"
+                }
+            }
+        },
+        "IAMRole00AWSServiceRoleForElastiCache00kj80r": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/aws-service-role/elasticache.amazonaws.com/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/aws-service-role/ElastiCacheServiceRolePolicy"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSServiceRoleForElastiCache",
+                "Description": "This policy allows ElastiCache to manage AWS resources on your behalf as necessary for managing your cache.",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "elasticache.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "MemoryDBParameterGroup00defaultmemorydbredis700WLZ4C": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::MemoryDB::ParameterGroup",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ParameterGroupName": "default.memorydb-redis7",
+                "Family": "memorydb_redis7",
+                "Description": "Default parameter group for memorydb_redis7"
+            }
+        },
+        "LogsLogStream0020241025LATESTd7c8dd7a6fe948328e520c9cf18c854400BzBuj": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Logs::LogStream",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "LogStreamName": "2024/10/25/[$LATEST]d7c8dd7a6fe948328e520c9cf18c8544",
+                "LogGroupName": {
+                    "Ref": "LogsLogGroup00awslambdaFraudTransaction003XojE"
+                }
+            }
+        },
+        "EC2InternetGateway00igw06d3df620efb612d90063KaA": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::InternetGateway",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Tags": []
+            }
+        },
+        "CloudFrontCachePolicy00b2884449e4de46a7ac3670bc7f1ddd6d000WACq": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Default policy when compression is disabled",
+                    "MinTTL": 1,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "none"
+                        },
+                        "EnableAcceptEncodingBrotli": false,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "none"
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": false
+                    },
+                    "DefaultTTL": 86400,
+                    "Name": "Managed-CachingOptimizedForUncompressedObjects"
+                }
+            }
+        },
+        "CloudFrontCachePolicy0083da9c7e98b44e11a16804f0df8e2c6500e7ygd": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy for origins that return Cache-Control headers. Query strings are not included in the cache key.",
+                    "MinTTL": 0,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "none"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "whitelist",
+                            "Headers": [
+                                "x-method-override",
+                                "origin",
+                                "host",
+                                "x-http-method",
+                                "x-http-method-override"
+                            ]
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "all"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 0,
+                    "Name": "UseOriginCacheControlHeaders"
+                }
+            }
+        },
+        "EC2NetworkInterface00eni02313a7084c7cc73c00BzS0X": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::NetworkInterface",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Description": "VPC Endpoint Interface vpce-07a57d88f9d248026",
+                "PrivateIpAddress": "172.31.17.246",
+                "PrivateIpAddresses": [
+                    {
+                        "PrivateIpAddress": "172.31.17.246",
+                        "Primary": true
+                    }
+                ],
+                "SecondaryPrivateIpAddressCount": 0,
+                "Ipv6PrefixCount": 0,
+                "Ipv4Prefixes": [],
+                "Ipv4PrefixCount": 0,
+                "GroupSet": [
+                    "sg-09e6095dfbaa7a7a8"
+                ],
+                "Ipv6Prefixes": [],
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet04820e14de91cd66f00ADo14"
+                },
+                "SourceDestCheck": true,
+                "InterfaceType": "vpc_endpoint",
+                "Tags": []
+            }
+        },
+        "EC2SubnetNetworkAclAssociation00aclassoc0246d7b4924f65d410017m1I": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "EC2NetworkAcl00acl052156e48bf70bf040054Lm5"
+                },
+                "SubnetId": {
+                    "Ref": "EC2Subnet00subnet0e02ff1ff4b01fbe700tEGbf"
+                }
+            }
+        },
+        "EC2EIP0031311991690086s3H": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::EC2::EIP",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "PublicIpv4Pool": "amazon",
+                "Domain": "vpc",
+                "Tags": [],
+                "NetworkBorderGroup": "us-east-2"
+            }
+        },
+        "IAMRole00AWSGlueServiceRole00bn77x": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/service-role/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::867344449800:policy/service-role/AWSGlueServiceRole-EZCRC-s3Policy",
+                    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                    "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess",
+                    "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "AWSGlueServiceRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "glue.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "KMSKey0097b91627a5e44cddb87d28c8797e6e0900MUlJu": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::KMS::Key",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Origin": "AWS_KMS",
+                "MultiRegion": false,
+                "Description": "Default key that protects my SNS data when no other key is defined",
+                "KeyPolicy": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Condition": {
+                                "StringEquals": {
+                                    "kms:ViaService": "sns.us-east-2.amazonaws.com",
+                                    "kms:CallerAccount": "867344449800"
+                                }
+                            },
+                            "Resource": "*",
+                            "Action": [
+                                "kms:Decrypt",
+                                "kms:GenerateDataKey*",
+                                "kms:CreateGrant",
+                                "kms:ListGrants",
+                                "kms:DescribeKey"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            },
+                            "Sid": "Allow access through SNS for all principals in the account that are authorized to use SNS"
+                        },
+                        {
+                            "Resource": "*",
+                            "Action": [
+                                "kms:Describe*",
+                                "kms:Get*",
+                                "kms:List*",
+                                "kms:RevokeGrant"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "arn:aws:iam::867344449800:root"
+                            },
+                            "Sid": "Allow direct access to key metadata to the account"
+                        },
+                        {
+                            "Condition": {
+                                "StringEquals": {
+                                    "aws:SourceAccount": "867344449800"
+                                },
+                                "ArnLike": {
+                                    "aws:SourceArn": "arn:*:sns:us-east-2:867344449800:*"
+                                }
+                            },
+                            "Resource": "*",
+                            "Action": "kms:Decrypt",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "sns.amazonaws.com"
+                            },
+                            "Sid": "Allow SNS to decrypt archived messages"
+                        }
+                    ],
+                    "Id": "auto-sns-2"
+                },
+                "KeySpec": "SYMMETRIC_DEFAULT",
+                "Enabled": true,
+                "EnableKeyRotation": false,
+                "KeyUsage": "ENCRYPT_DECRYPT",
+                "Tags": []
+            }
+        }
+    }
+}

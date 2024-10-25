@@ -1,0 +1,130 @@
+# This AWS SAM template has been generated from your function's configuration. If
+# your function has one or more triggers, note that the AWS resources associated
+# with these triggers aren't fully specified in this template and include
+# placeholder values. Open this template in AWS Application Composer or your
+# favorite IDE and modify it to specify a serverless application with other AWS
+# resources.
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application Model template describing your function.
+Resources:
+  FraudTransaction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Description: ''
+      MemorySize: 1024
+      Timeout: 5
+      Handler: lambda_function/lambda_handler.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      EphemeralStorage:
+        Size: 2056
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      PackageType: Zip
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ec2:CreateNetworkInterface
+                - ec2:DescribeNetworkInterfaces
+                - ec2:DeleteNetworkInterface
+                - ec2:AssignPrivateIpAddresses
+                - ec2:UnassignPrivateIpAddresses
+              Resource: '*'
+            - Sid: Statement1
+              Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:UpdateItem
+              Resource:
+                - '*'
+            - Sid: VisualEditor0
+              Effect: Allow
+              Action:
+                - kafka:DescribeClusterV2
+                - kafka:DescribeCluster
+              Resource: >-
+                arn:aws:kafka:us-east-2:867344449800:cluster/demo-cluster-1/72a90fe3-7f1f-4433-b6e5-48b6b398fa1f-s1
+            - Sid: VisualEditor1
+              Effect: Allow
+              Action:
+                - kafka:ListClustersV2
+                - kafka:ListClusters
+                - kafka:GetBootstrapBrokers
+              Resource: '*'
+            - Sid: SNSFullAccess
+              Effect: Allow
+              Action:
+                - sns:*
+              Resource: '*'
+            - Sid: SMSAccessViaSNS
+              Effect: Allow
+              Action:
+                - sms-voice:DescribeVerifiedDestinationNumbers
+                - sms-voice:CreateVerifiedDestinationNumber
+                - sms-voice:SendDestinationNumberVerificationCode
+                - sms-voice:SendTextMessage
+                - sms-voice:DeleteVerifiedDestinationNumber
+                - sms-voice:VerifyDestinationNumber
+                - sms-voice:DescribeAccountAttributes
+                - sms-voice:DescribeSpendLimits
+                - sms-voice:DescribePhoneNumbers
+                - sms-voice:SetTextMessageSpendLimitOverride
+                - sms-voice:DescribeOptedOutNumbers
+                - sms-voice:DeleteOptedOutNumber
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  aws:CalledViaLast: sns.amazonaws.com
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+              Resource: arn:aws:logs:us-east-2:867344449800:*
+            - Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource:
+                - >-
+                  arn:aws:logs:us-east-2:867344449800:log-group:/aws/lambda/FraudTransaction:*
+      RecursiveLoop: Terminate
+      SnapStart:
+        ApplyOn: None
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-09e6095dfbaa7a7a8
+        SubnetIds:
+          - subnet-0e201ebf286ed83de
+          - subnet-04820e14de91cd66f
+          - subnet-0e02ff1ff4b01fbe7
+        Ipv6AllowedForDualStack: false
+      Events:
+        MSK1:
+          Type: MSK
+          Properties:
+            ConsumerGroupId: 57ad815b-c155-4a44-a834-46e5908b158a
+            SourceAccessConfigurations:
+              - {}
+            StartingPosition: LATEST
+            StartingPositionTimestamp: 0
+            Stream:
+              Ref: MSKCluster1
+            Topics:
+              - transaction_stream
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+  MSKCluster1:
+    Type: AWS::MSK::Cluster
+    Properties:
+      BrokerNodeGroupInfo:
+        ClientSubnets:
+          - Fill in
+        InstanceType: kafka.t3.small
+      ClusterName: MSKCluster1
+      KafkaVersion: 2.2.1
+      NumberOfBrokerNodes: 1
